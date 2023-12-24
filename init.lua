@@ -5,6 +5,7 @@
 =====================================================================
 
 Kickstart.nvim is *not* a distribution.
+https://github.com/nvim-lua/kickstart.nvim/tree/master
 
 Kickstart.nvim is a template for your own configuration.
   The goal is that you can read every line of code, top-to-bottom, understand
@@ -20,7 +21,6 @@ Kickstart.nvim is a template for your own configuration.
 
   And then you can explore or search through `:help lua-guide`
   - https://neovim.io/doc/user/lua-guide.html
-
 
 Kickstart Guide:
 
@@ -66,6 +66,7 @@ vim.opt.rtp:prepend(lazypath)
 --
 --  You can also configure plugins after the setup call,
 --    as they will be available in your neovim runtime.
+
 require('lazy').setup({
   -- NOTE: First, some plugins that don't require any configuration
 
@@ -73,16 +74,18 @@ require('lazy').setup({
   --https://github.com/ms-jpq/chadtree
   --  {'ms-jpq/chadtree', {branch: 'chad', 'do': 'python3 -m chadtree deps'}},
 
-  -- nvie Tree
+  { 'szw/vim-maximizer' },
+
+  -- nvim Tree
   -- file explorer
-  {"nvim-tree/nvim-tree.lua"},
+  { "nvim-tree/nvim-tree.lua" },
 
   -- vs-code like icons
-  {"nvim-tree/nvim-web-devicons"},
+  { "nvim-tree/nvim-web-devicons" },
 
   -- turn on relative numbers
   -- https://github.com/jeffkreeftmeijer/vim-numbertoggle
- { "sitiom/nvim-numbertoggle" },
+  { "sitiom/nvim-numbertoggle" },
 
   -- Git related plugins
   'tpope/vim-fugitive',
@@ -110,6 +113,14 @@ require('lazy').setup({
     },
   },
 
+  { 'github/copilot.vim' },
+  {
+    "zbirenbaum/copilot-cmp",
+    config = function()
+      require("copilot_cmp").setup()
+    end
+  },
+
   {
     -- Autocompletion
     'hrsh7th/nvim-cmp',
@@ -125,6 +136,13 @@ require('lazy').setup({
       -- Adds a number of user-friendly snippets
       'rafamadriz/friendly-snippets',
     },
+  },
+
+  -- autocomplete pairs, like brackets
+  {
+    'windwp/nvim-autopairs',
+    event = "InsertEnter",
+    opts = {} -- this is equalent to setup({}) function
   },
 
   -- Useful plugin to show you pending keybinds.
@@ -204,26 +222,61 @@ require('lazy').setup({
     },
   },
 
- -- {
-    -- Theme inspired by Atom
- --   'navarasu/onedark.nvim',
- --   priority = 1000,
- --   config = function()
- --     vim.cmd.colorscheme 'onedark'
- --   end,
- -- },
+  -- {
+  -- Theme inspired by Atom
+  --   'navarasu/onedark.nvim',
+  --   priority = 1000,
+  --   config = function()
+  --     vim.cmd.colorscheme 'onedark'
+  --   end,
+  -- },
 
 
+  -- { -- original default install
+  --   "folke/tokyonight.nvim",
+  --   lazy = false,
+  --   priority = 1000,
+  --   style = 'night',
+  --   opts = {},
+  --   config = function()
+  --     vim.g.tokyonight_colors = { bg = "#24283b" }
+  --     vim.cmd.colorscheme 'tokyonight'
+  --   end,
+  -- },
   {
-  "folke/tokyonight.nvim",
-  lazy = false,
-  priority = 1000,
-  opts = {},
+    'folke/tokyonight.nvim',
     config = function()
-      vim.cmd.colorscheme 'tokyonight'
-    end,
-  },
+      require('tokyonight').setup({
+        style = 'night',     -- Choose from 'storm', 'moon', 'night', or 'day'
+        transparent = false, -- Enable or disable transparent background
+        terminal_colors = true,
+        styles = {
+          comments = { italic = true },
+          keywords = { italic = true },
+          functions = {},
+          variables = {},
+          sidebars = "dark",
+          floats = "dark",
+        },
+        sidebars = { "qf", "help", "terminal", "packer" },
+        on_colors = function(colors)
+          -- Customize specific colors (e.g., change hint color to orange)
+          colors.hint = colors.orange
+          colors.error = "#ff0000"
+          colors.bg_popup = "#262830"
+          -- colors.bg_highlight = '#FF0000'
+          colors.border = "#FF0000"
 
+          -- colors.fg = "#60657A"
+          -- colors.bg = "#000000" -- changed config @ /Users/vegaprime/.local/share/nvim/lazy/tokyonight.nvim
+        end,
+        -- Additional customization can be done here
+      })
+
+      -- After setting up the configuration, load the colorscheme
+      vim.cmd.colorscheme 'tokyonight'
+    end
+  },
 
   {
     -- Set lualine as statusline
@@ -232,10 +285,48 @@ require('lazy').setup({
     opts = {
       options = {
         icons_enabled = true,
-        theme = 'onedark',
-        component_separators = '|',
-        section_separators = '',
+        theme = 'powerline_dark',
+        component_separators = { left = '', right = '' },
+        section_separators = { left = '', right = '' },
       },
+      sections = {
+        --       lualine_a = { 'mode' },
+        lualine_a = { { 'mode', fmt = function(str) return str:sub(1, 3) end } },
+        lualine_b = { 'branch', 'diff', 'diagnostics', 'filename' },
+        -- lualine_c = { { 'filename', path = 1 } },
+        lualine_c = { {
+          function()
+            local path = vim.fn.expand('%:~:.:h') -- Get the relative path without filename
+            if path == '.' then return '' end     -- Return empty if it's the current directory
+            return path
+          end
+        }, },
+        lualine_x = {
+          { function() return 'b:[ ' .. vim.fn.bufnr() .. ' ]' end }, -- custom Buffer readout
+          -- { function()
+          --   local filetype = vim.bo.filetype
+          --   if filetype == '' then return '' end
+          --   -- local icon, _ = require 'nvim-web-devicons'.get_icon(filetype)
+          --   local icon = require('nvim-web-devicons').get_icon(filetype)
+          --   if icon == nil then
+          --     -- If no icon is found, return an empty string or a default icon
+          --     return '' -- or a default icon of your choice
+          --   end
+          --   return icon
+          -- end,
+          -- },
+          {
+            'filetype',
+            fmt = function(str)
+              return
+                  str:sub(0, 1)
+            end
+          },
+        },
+        -- lualine_y = { 'progress' },
+        -- lualine_z = { 'location' }
+      },
+
     },
   },
 
@@ -248,38 +339,42 @@ require('lazy').setup({
     opts = {},
   },
 
-  -- "gc" to comment visual regions/lines
+  -- "gc" to comment Visual regions/lines
+  -- https://github.com/numToStr/Comment.nvim
+  -- `gco` - Insert comment to the next line and enters INSERT mode (from Normal...)
+  -- `gcO` - Insert comment to the previous line and enters INSERT mode
+  -- `gcA` - Insert comment to end of the current line and enters INSERT mode
   { 'numToStr/Comment.nvim', opts = {} },
 
   -- Fuzzy Finder (files, lsp, etc)
- {
-  'nvim-telescope/telescope.nvim',
-  branch = '0.1.x',
-  dependencies = {
-    'nvim-lua/plenary.nvim',
+  {
+    'nvim-telescope/telescope.nvim',
+    branch = '0.1.x',
+    dependencies = {
+      'nvim-lua/plenary.nvim',
       -- Fuzzy Finder Algorithm which requires local dependencies to be built.
       -- Only load if `make` is available. Make sure you have the system
       -- requirements installed.
 
-    {
-      'nvim-telescope/telescope-fzf-native.nvim',
- -- NOTE: If you are having trouble with this installation,
+      {
+        'nvim-telescope/telescope-fzf-native.nvim',
+        -- NOTE: If you are having trouble with this installation,
         --       refer to the README for telescope-fzf-native for more instructions.
 
-      build = 'make',
-      cond = function()
-        return vim.fn.executable 'make' == 1
-      end,
+        build = 'make',
+        cond = function()
+          return vim.fn.executable 'make' == 1
+        end,
+      },
     },
-  },
-  config = function()
-    require('telescope').setup{
-      defaults = {
-        file_ignore_patterns = {"node_modules"}
+    config = function()
+      require('telescope').setup {
+        defaults = {
+          file_ignore_patterns = { "node_modules" }
+        }
       }
-    }
-  end,
-},
+    end,
+  },
 
   {
     -- Highlight, edit, and navigate code
@@ -290,11 +385,46 @@ require('lazy').setup({
     build = ':TSUpdate',
   },
 
+  {
+    -- Markdown Preview:
+    -- peek -> https://github.com/toppair/peek.nvim
+    -- https://docs.deno.com/runtime/manual/getting_started/installation
+    "toppair/peek.nvim",
+    event = { "VeryLazy" },
+    build = "deno task --quiet build:fast",
+    config = function()
+      require("peek").setup()
+      -- refer to `configuration to change defaults`
+      vim.api.nvim_create_user_command("PeekOpen", require("peek").open, {})
+      vim.api.nvim_create_user_command("PeekClose", require("peek").close, {})
+    end,
+  },
+
+  {
+    -- MarkdownPreview
+    -- https://github.com/iamcco/markdown-preview.nvim
+    "iamcco/markdown-preview.nvim",
+    cmd = { "MarkdownPreviewToggle", "MarkdownPreview", "MarkdownPreviewStop" },
+    ft = { "markdown" },
+    build = function() vim.fn["mkdp#util#install"]() end,
+  },
+
+  {
+    -- https://github.com/rmagatti/auto-session
+    'rmagatti/auto-session',
+    config = function()
+      require("auto-session").setup {
+        log_level = "error",
+        auto_session_suppress_dirs = { "~/", "~/Projects", "~/Downloads", "/" },
+      }
+    end
+  },
+
   -- NOTE: Next Step on Your Neovim Journey: Add/Configure additional "plugins" for kickstart
   --       These are some example plugins that I've included in the kickstart repository.
   --       Uncomment any of the lines below to enable them.
-  -- require 'kickstart.plugins.autoformat',
-  -- require 'kickstart.plugins.debug',
+  require 'plugins.autoformat',
+  require 'plugins.debug',
 
   -- NOTE: The import below can automatically add your own plugins, configuration, etc from `lua/custom/plugins/*.lua`
   --    You can use this folder to prevent any conflicts with this init.lua if you're interested in keeping
@@ -303,6 +433,8 @@ require('lazy').setup({
   --
   --    For additional information see: https://github.com/folke/lazy.nvim#-structuring-your-plugins
   -- { import = 'custom.plugins' },
+  { import = 'plugins' },
+
 }, {})
 
 -- [[ Setting options ]]
@@ -374,7 +506,7 @@ vim.api.nvim_create_autocmd('TextYankPost', {
 })
 
 -- Visual mode mapping: When you press <leader>y, it will copy to the system clipboard
-vim.api.nvim_set_keymap('v', '<leader>y', '"+y', { noremap = true, silent = true })
+-- vim.api.nvim_set_keymap('v', '<leader>y', '"+y', { noremap = true, silent = true })
 
 
 -- [[ Configure Telescope ]]
@@ -571,23 +703,23 @@ local on_attach = function(_, bufnr)
   end, { desc = 'Format current buffer with LSP' })
 end
 
--- document existing key chains
-require('which-key').register {
-  ['<leader>c'] = { name = '[C]ode', _ = 'which_key_ignore' },
-  ['<leader>d'] = { name = '[D]ocument', _ = 'which_key_ignore' },
-  ['<leader>g'] = { name = '[G]it', _ = 'which_key_ignore' },
-  ['<leader>h'] = { name = 'Git [H]unk', _ = 'which_key_ignore' },
-  ['<leader>r'] = { name = '[R]ename', _ = 'which_key_ignore' },
-  ['<leader>s'] = { name = '[S]earch', _ = 'which_key_ignore' },
-  ['<leader>t'] = { name = '[T]oggle', _ = 'which_key_ignore' },
-  ['<leader>w'] = { name = '[W]orkspace', _ = 'which_key_ignore' },
-}
--- register which-key VISUAL mode
--- required for visual <leader>hs (hunk stage) to work
-require('which-key').register({
-  ['<leader>'] = { name = 'VISUAL <leader>' },
-  ['<leader>h'] = { 'Git [H]unk' },
-}, { mode = 'v' })
+-- -- document existing key chains
+-- require('which-key').register {
+--   ['<leader>c'] = { name = '[C]ode', _ = 'which_key_ignore' },
+--   ['<leader>d'] = { name = '[D]ocument', _ = 'which_key_ignore' },
+--   ['<leader>g'] = { name = '[G]it', _ = 'which_key_ignore' },
+--   ['<leader>h'] = { name = 'Git [H]unk', _ = 'which_key_ignore' },
+--   ['<leader>r'] = { name = '[R]ename', _ = 'which_key_ignore' },
+--   ['<leader>s'] = { name = '[S]earch', _ = 'which_key_ignore' },
+--   ['<leader>t'] = { name = '[T]oggle', _ = 'which_key_ignore' },
+--   ['<leader>w'] = { name = '[W]orkspace', _ = 'which_key_ignore' },
+-- }
+-- -- register which-key VISUAL mode
+-- -- required for visual <leader>hs (hunk stage) to work
+-- require('which-key').register({
+--   ['<leader>'] = { name = 'VISUAL <leader>' },
+--   ['<leader>h'] = { 'Git [H]unk' },
+-- }, { mode = 'v' })
 
 -- mason-lspconfig requires that these setup functions are called in this order
 -- before setting up the servers.
@@ -644,10 +776,12 @@ mason_lspconfig.setup_handlers {
     }
   end,
 }
-
+-- { import = "lazyvim.plugins.coding.lua" } -- trying diff configs
 -- [[ Configure nvim-cmp ]]
 -- See `:help cmp`
+-- START BLOCK COMMENT TEST
 local cmp = require 'cmp'
+-- local has_copilot, copilot_cmp = pcall(require, "copilot_cmp") -- new->copilot
 local luasnip = require 'luasnip'
 require('luasnip.loaders.from_vscode').lazy_load()
 luasnip.config.setup {}
@@ -676,6 +810,8 @@ cmp.setup {
         cmp.select_next_item()
       elseif luasnip.expand_or_locally_jumpable() then
         luasnip.expand_or_jump()
+        -- elseif has_copilot and copilot_cmp.visible() then -- new
+        --   copilot_cmp.next()                              -- new
       else
         fallback()
       end
@@ -685,6 +821,8 @@ cmp.setup {
         cmp.select_prev_item()
       elseif luasnip.locally_jumpable(-1) then
         luasnip.jump(-1)
+        -- elseif has_copilot and copilot_cmp.visible() then
+        --   copilot_cmp.prev()
       else
         fallback()
       end
@@ -696,12 +834,15 @@ cmp.setup {
     { name = 'path' },
   },
 }
+-- END BLOCK COMMENT TEST
+
 -- disable netrw at the very start of your init.lua
 vim.g.loaded_netrw = 1
 vim.g.loaded_netrwPlugin = 1
 
 -- set termguicolors to enable highlight groups
 vim.opt.termguicolors = true
+-- vim.opt.guicursor = 'n:block'
 
 -- empty setup using defaults
 require("nvim-tree").setup()
