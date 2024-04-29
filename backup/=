@@ -1,0 +1,94 @@
+-- send deleted lines to blackhole, so they dont populate the clipboard register
+vim.api.nvim_set_keymap('n', 'DD', '"_dd', { noremap = true, silent = true })
+
+-- Visual mode mapping: When you press <leader>y, it will copy to the system clipboard
+vim.api.nvim_set_keymap('v', '<leader>y', '"+y', { noremap = true, silent = true })
+
+-- START Tabs / Buffers / Windows
+--  New Tab:
+vim.api.nvim_set_keymap('n', '<leader>tn', ':tabnew<CR>', { noremap = true, silent = true })
+-- Next / Previous / Close Tab:
+vim.api.nvim_set_keymap('n', '<leader>tl', ':tabnext<CR>', { noremap = true, silent = true })
+vim.api.nvim_set_keymap('n', '<leader>th', ':tabprevious<CR>', { noremap = true, silent = true })
+vim.api.nvim_set_keymap('n', '<leader>tc', ':tabclose<CR>', { noremap = true, silent = true })
+-- Next / Previous / Delete Buffer:
+vim.api.nvim_set_keymap('n', '<leader>bn', ':bnext<CR>', { noremap = true, silent = true })
+vim.api.nvim_set_keymap('n', '<leader>bp', ':bprevious<CR>', { noremap = true, silent = true })
+vim.api.nvim_set_keymap('n', '<leader>bd', ':bd<CR>', { noremap = true, silent = true })
+-- Left / Right / Up / Down / Close Window:
+vim.api.nvim_set_keymap('n', '<leader>wh', '<C-w>h', { noremap = true, silent = true })
+vim.api.nvim_set_keymap('n', '<leader>wl', '<C-w>l', { noremap = true, silent = true })
+vim.api.nvim_set_keymap('n', '<leader>wk', '<C-w>k', { noremap = true, silent = true })
+vim.api.nvim_set_keymap('n', '<leader>wj', '<C-w>j', { noremap = true, silent = true })
+vim.api.nvim_set_keymap('n', '<leader>wc', ':close<CR>', { noremap = true, silent = true })
+vim.api.nvim_set_keymap('n', '<leader>wv', ':vs<CR>', { noremap = true, silent = true })
+vim.api.nvim_set_keymap('n', '<leader>wu', ':sp<CR>', { noremap = true, silent = true })
+vim.api.nvim_set_keymap('n', '<leader>ww', ':w=<CR>', { noremap = true, silent = true })
+-- END
+
+--START Toggle :MaximizerToggle
+vim.api.nvim_set_keymap('n', '<leader>m', ':MaximizerToggle<CR>', { noremap = true, silent = true })
+-- END
+
+-- START NvimTree:
+vim.api.nvim_set_keymap('n', '<C-b>', ':NvimTreeToggle<CR>', { noremap = true, silent = true })
+-- END
+
+require('which-key').register({
+    m = "Toggle Maximizer",
+    t = {
+        name = "+Tab",
+        n = "New Tab",
+        l = "Next Tab",
+        h = "Previous Tab",
+        c = "Close Tab",
+        t = { ":NvimTreeToggle<CR>", "Toggle NvimTree" },
+
+    },
+    b = {
+        name = "+Buffer",
+        n = "Next Buffer",
+        p = "Previous Buffer",
+        d = "Delete Buffer",
+    },
+    f = {
+        name = "+Window",
+        h = "Left Window",
+        l = "Right Window",
+        k = "Up Window",
+        j = "Down Window",
+        c = "Close Window",
+    },
+    w = {
+        name = "+[W]orkspace",
+        -- h = "Left Window",
+        -- l = "Right Window",
+        -- k = "Up Window",
+        -- j = "Down Window",
+        -- c = "Close Window",
+        v = "Vertical Split",
+        u = "Horizontal Split",
+    },
+}, { prefix = "<leader>" })
+--END
+
+
+-- document existing key chains
+require('which-key').register {
+    ['<leader>c'] = { name = '[C]ode', _ = 'which_key_ignore' },
+    ['<leader>d'] = { name = '[D]ocument', _ = 'which_key_ignore' },
+    ['<leader>g'] = { name = '[G]it', _ = 'which_key_ignore' },
+    ['<leader>h'] = { name = 'Git [H]unk', _ = 'which_key_ignore' },
+    ['<leader>r'] = { name = '[R]ename', _ = 'which_key_ignore' },
+    ['<leader>s'] = { name = '[S]earch', _ = 'which_key_ignore' },
+    ['<leader>t'] = { name = '[T]oggle', _ = 'which_key_ignore' },
+    ['<leader>w'] = { name = '[W]orkspace', _ = 'which_key_ignore' },
+}
+-- register which-key VISUAL mode
+-- required for visual <leader>hs (hunk stage) to work
+require('which-key').register({
+    ['<leader>'] = { name = 'VISUAL <leader>' },
+    ['<leader>h'] = { 'Git [H]unk' },
+}, { mode = 'v' })
+
+return {}
