@@ -344,6 +344,7 @@ require('lazy').setup({
           colors.border            = "#FF0000"
           -- colors.bg_statusline = "#FF0000"
           colors.fg_gutter         = "#60657A"
+          colors.Cursor            = "#FF0000"
           colors.comment           = "#60657A"
           colors.fg                = "#c0caf5"
           colors.BufferInactive_fg = "#e1e2eb"
@@ -505,6 +506,7 @@ require('lazy').setup({
         log_level = "error",
         auto_session_suppress_dirs = { "~/", "~/Projects", "~/Downloads", "/" },
       }
+      vim.o.sessionoptions = "blank,buffers,curdir,folds,help,tabpages,winsize,winpos,terminal,localoptions"
     end
   },
 
@@ -528,6 +530,9 @@ require('lazy').setup({
 -- [[ Setting options ]]
 -- See `:help vim.o`
 -- NOTE: You can change these options as you wish!
+--
+-- Open new vertical splits to the right
+vim.opt.splitright = true
 
 -- Set highlight on search
 vim.o.hlsearch = false
