@@ -150,8 +150,10 @@ require('lazy').setup({
     },
   },
 
+  -- Copilot
   { 'github/copilot.vim' },
 
+  -- ChatGPT
   {
     "jackMort/ChatGPT.nvim",
     event = "VeryLazy",
@@ -515,6 +517,7 @@ require('lazy').setup({
   --       Uncomment any of the lines below to enable them.
   require 'plugins.autoformat',
   require 'plugins.debug',
+  require 'plugins.iron',
 
   -- NOTE: The import below can automatically add your own plugins, configuration, etc from `lua/custom/plugins/*.lua`
   --    You can use this folder to prevent any conflicts with this init.lua if you're interested in keeping
@@ -524,6 +527,8 @@ require('lazy').setup({
   --    For additional information see: https://github.com/folke/lazy.nvim#-structuring-your-plugins
   -- { import = 'custom.plugins' },
   { import = 'plugins' },
+
+  -- require("nvim-python-repl").setup(),
 
 }, {})
 
