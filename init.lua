@@ -150,8 +150,10 @@ require('lazy').setup({
     },
   },
 
+  -- Copilot
   { 'github/copilot.vim' },
 
+  -- ChatGPT
   {
     "jackMort/ChatGPT.nvim",
     event = "VeryLazy",
@@ -344,6 +346,7 @@ require('lazy').setup({
           colors.border            = "#FF0000"
           -- colors.bg_statusline = "#FF0000"
           colors.fg_gutter         = "#60657A"
+          colors.Cursor            = "#FF0000"
           colors.comment           = "#60657A"
           colors.fg                = "#c0caf5"
           colors.BufferInactive_fg = "#e1e2eb"
@@ -505,6 +508,7 @@ require('lazy').setup({
         log_level = "error",
         auto_session_suppress_dirs = { "~/", "~/Projects", "~/Downloads", "/" },
       }
+      vim.o.sessionoptions = "blank,buffers,curdir,folds,help,tabpages,winsize,winpos,terminal,localoptions"
     end
   },
 
@@ -513,6 +517,7 @@ require('lazy').setup({
   --       Uncomment any of the lines below to enable them.
   require 'plugins.autoformat',
   require 'plugins.debug',
+  require 'plugins.iron',
 
   -- NOTE: The import below can automatically add your own plugins, configuration, etc from `lua/custom/plugins/*.lua`
   --    You can use this folder to prevent any conflicts with this init.lua if you're interested in keeping
@@ -523,11 +528,16 @@ require('lazy').setup({
   -- { import = 'custom.plugins' },
   { import = 'plugins' },
 
+  -- require("nvim-python-repl").setup(),
+
 }, {})
 
 -- [[ Setting options ]]
 -- See `:help vim.o`
 -- NOTE: You can change these options as you wish!
+--
+-- Open new vertical splits to the right
+vim.opt.splitright = true
 
 -- Set highlight on search
 vim.o.hlsearch = false
