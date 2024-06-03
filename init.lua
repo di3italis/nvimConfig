@@ -126,11 +126,6 @@ require('lazy').setup({
   'tpope/vim-fugitive',
   'tpope/vim-rhubarb',
 
-  -- Detect tabstop and shiftwidth automatically
-  -- 'tpope/vim-sleuth',
-  -- I don't like this plugin, it's not working as expected, hardcoding it below -->
-
-
   -- NOTE: This is where your plugins related to LSP can be installed.
   --  The configuration is done below. Search for lspconfig to find it below.
   {
@@ -167,43 +162,6 @@ require('lazy').setup({
       "nvim-telescope/telescope.nvim"
     }
   },
-  -- {
-  --   "jackMort/ChatGPT.nvim",
-  --   event = "VeryLazy",
-  --   config = function()
-  --     require("chatgpt").setup({
-  --       api_key_cmd = "gpg --quiet --batch --decrypt " .. vim.fn.expand("$HOME") .. "/apikey.txt.gpg",
-  --     })
-  --   end,
-  --   dependencies = {
-  --     "MunifTanjim/nui.nvim",
-  --     "nvim-lua/plenary.nvim",
-  --     "folke/trouble.nvim",
-  --     "nvim-telescope/telescope.nvim"
-  --   }
-  -- },
-
-
-
-
-  --[[ -- START Autocompletion
-  {
-    -- Autocompletion
-     'hrsh7th/nvim-cmp', -- this was interfering with copilot
-     dependencies = { -- this was interfering with copilot
-      -- Snippet Engine & its associated nvim-cmp source
-      'L3MON4D3/LuaSnip',
-      'saadparwaiz1/cmp_luasnip',
-
-      -- Adds LSP completion capabilities
-      'hrsh7th/cmp-nvim-lsp',
-      'hrsh7th/cmp-path',
-
-      -- Adds a number of user-friendly snippets
-      -- 'rafamadriz/friendly-snippets', -- this was interfering with copilot
-    },
-  },
-  --]] -- END Autocompletion
 
   -- autocomplete pairs, like brackets
   {
@@ -472,21 +430,6 @@ require('lazy').setup({
       'nvim-treesitter/nvim-treesitter-textobjects',
     },
     build = ':TSUpdate',
-  },
-
-  {
-    -- Markdown Preview:
-    -- peek -> https://github.com/toppair/peek.nvim
-    -- https://docs.deno.com/runtime/manual/getting_started/installation
-    "toppair/peek.nvim",
-    event = { "VeryLazy" },
-    build = "deno task --quiet build:fast",
-    config = function()
-      require("peek").setup()
-      -- refer to `configuration to change defaults`
-      vim.api.nvim_create_user_command("PeekOpen", require("peek").open, {})
-      vim.api.nvim_create_user_command("PeekClose", require("peek").close, {})
-    end,
   },
 
   {
