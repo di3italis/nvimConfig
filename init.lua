@@ -305,7 +305,7 @@ require('lazy').setup({
   --   "folke/tokyonight.nvim",
   --   lazy = false,
   --   priority = 1000,
-  --   style = 'night',
+  --   style = 'day',
   --   opts = {},
   --   config = function()
   --     vim.g.tokyonight_colors = { bg = "#24283b" }
@@ -356,6 +356,7 @@ require('lazy').setup({
         -- Additional customization can be done here
         on_highlights = function(hl, c)
           hl.Cursor  = {
+            fg = "#262830",
             bg = "#FF0000",
           }
           hl.lCursor = {
@@ -1226,10 +1227,11 @@ require('lazy').setup({
 
 
   --[[ -- START Autocompletion
+  -- ]]
   {
     -- Autocompletion
-     'hrsh7th/nvim-cmp', -- this was interfering with copilot
-     dependencies = { -- this was interfering with copilot
+    'hrsh7th/nvim-cmp',  -- this was interfering with copilot
+    dependencies = {     -- this was interfering with copilot
       -- Snippet Engine & its associated nvim-cmp source
       'L3MON4D3/LuaSnip',
       'saadparwaiz1/cmp_luasnip',
@@ -1239,9 +1241,10 @@ require('lazy').setup({
       'hrsh7th/cmp-path',
 
       -- Adds a number of user-friendly snippets
-      -- 'rafamadriz/friendly-snippets', -- this was interfering with copilot
+      'rafamadriz/friendly-snippets', -- this was interfering with copilot
     },
   },
+  -- [[
   --]] -- END Autocompletion
 
   -- autocomplete pairs, like brackets
@@ -1566,7 +1569,7 @@ require('lazy').setup({
   require 'plugins.autoformat',
   require 'plugins.debug',
   require 'plugins.iron',
-  -- require 'plugins.nvim-python-repl',
+  require 'plugins.nvim-python-repl',
 
   -- NOTE: The import below can automatically add your own plugins, configuration, etc from `lua/custom/plugins/*.lua`
   --    You can use this folder to prevent any conflicts with this init.lua if you're interested in keeping
@@ -2072,4 +2075,3 @@ require('nvim-tree').setup({
 
 -- The line beneath this is called `modeline`. See `:help modeline`
 -- vim: ts=2 sts=2 sw=2 et
-
